@@ -1,4 +1,4 @@
-const connectDB = require('../db');
+const connectDB = require('../config/db');
 const Transaction = require('../models/transactionModel');
 
 exports.handler = async (event, context) => {

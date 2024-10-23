@@ -37,10 +37,10 @@ exports.handler = async (event, context) => {
       // POST /transactions - Create a new transaction
       case 'POST':
         const { type, category, amount, date, description } = JSON.parse(event.body);
-        if (!type || !category || !amount || !date) {
+        if (!type || !category || !amount) {
           return {
             statusCode: 400,
-            body: JSON.stringify({ error: 'Type, category, amount, and date are required.' }),
+            body: JSON.stringify({ error: 'Type, category, amount are required.' }),
           };
         }
 

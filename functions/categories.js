@@ -1,5 +1,5 @@
-const connectDB = require('./../db');
-const Category = require('./../models/categoryModel');
+const connectDB = require('../db');
+const Category = require('../models/categoryModel');
 
 exports.handler = async (event, context) => {
   await connectDB();

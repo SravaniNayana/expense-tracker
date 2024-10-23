@@ -12,6 +12,40 @@ exports.handler = async (event, context) => {
     switch (method) {
       // GET /transactions - Retrieve all transactions or a transaction by ID
       case 'GET':
+        if (event.path.includes('summary')) {
+          const { startDate, endDate, category } = event.queryStringParameters || {};
+
+          // Query for transactions within the date range and/or by category
+          let filter = {};
+          if (startDate && endDate) {
+            filter.date = {
+              $gte: new Date(startDate),
+              $lte: new Date(endDate),
+            };
+          }
+          if (category) {
+            filter.category = category;
+          }
+
+          const transactions = await Transaction.find(filter);
+          const totalIncome = transactions
+            .filter((t) => t.type === 'income')
+            .reduce((acc, t) => acc + t.amount, 0);
+          const totalExpenses = transactions
+            .filter((t) => t.type === 'expense')
+            .reduce((acc, t) => acc + t.amount, 0);
+          const balance = totalIncome - totalExpenses;
+
+          return {
+            statusCode: 200,
+            body: JSON.stringify({
+              totalIncome,
+              totalExpenses,
+              balance,
+              transactions,
+            }),
+          };
+        }
         if (transactionId) {
           // Retrieve a specific transaction by ID
           const transaction = await Transaction.findById(transactionId);
@@ -101,45 +135,45 @@ exports.handler = async (event, context) => {
         };
 
       // GET /summary - Retrieve summary of transactions (total income, total expenses, and balance)
-      case 'GET':
-        if (event.path.includes('summary')) {
-          const { startDate, endDate, category } = event.queryStringParameters || {};
+      // case 'GET':
+      //   if (event.path.includes('summary')) {
+      //     const { startDate, endDate, category } = event.queryStringParameters || {};
 
-          // Query for transactions within the date range and/or by category
-          let filter = {};
-          if (startDate && endDate) {
-            filter.date = {
-              $gte: new Date(startDate),
-              $lte: new Date(endDate),
-            };
-          }
-          if (category) {
-            filter.category = category;
-          }
+      //     // Query for transactions within the date range and/or by category
+      //     let filter = {};
+      //     if (startDate && endDate) {
+      //       filter.date = {
+      //         $gte: new Date(startDate),
+      //         $lte: new Date(endDate),
+      //       };
+      //     }
+      //     if (category) {
+      //       filter.category = category;
+      //     }
 
-          const transactions = await Transaction.find(filter);
-          const totalIncome = transactions
-            .filter((t) => t.type === 'income')
-            .reduce((acc, t) => acc + t.amount, 0);
-          const totalExpenses = transactions
-            .filter((t) => t.type === 'expense')
-            .reduce((acc, t) => acc + t.amount, 0);
-          const balance = totalIncome - totalExpenses;
+      //     const transactions = await Transaction.find(filter);
+      //     const totalIncome = transactions
+      //       .filter((t) => t.type === 'income')
+      //       .reduce((acc, t) => acc + t.amount, 0);
+      //     const totalExpenses = transactions
+      //       .filter((t) => t.type === 'expense')
+      //       .reduce((acc, t) => acc + t.amount, 0);
+      //     const balance = totalIncome - totalExpenses;
 
-          return {
-            statusCode: 200,
-            body: JSON.stringify({
-              totalIncome,
-              totalExpenses,
-              balance,
-              transactions,
-            }),
-          };
-        }
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ error: 'Summary not found' }),
-        };
+      //     return {
+      //       statusCode: 200,
+      //       body: JSON.stringify({
+      //         totalIncome,
+      //         totalExpenses,
+      //         balance,
+      //         transactions,
+      //       }),
+      //     };
+      //   }
+      //   return {
+      //     statusCode: 404,
+      //     body: JSON.stringify({ error: 'Summary not found' }),
+      //   };
 
       // Default case for unsupported methods
       default:

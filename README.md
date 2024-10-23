@@ -41,15 +41,16 @@ This is a RESTful API for managing personal financial records such as income and
         ```json
         {
             "name": "Groceries",
-            "type": "expense", // or "income"
+            "type": "expense" // or "income"
         }
     - Response:
         ```json
         {
-            "_id": "613a1f3e6f1f5e3534a3d2e1",
+            "_id": "6718f6a595a8c549cb97e899",
             "name": "Groceries",
             "type": "expense"
         }
+
 2. Retrieve All categories
     - URL: /api/categories
     - Method: GET
@@ -57,12 +58,12 @@ This is a RESTful API for managing personal financial records such as income and
         ```json
         [
             {
-                "_id": "613a1e1b6f1f5e3534a3d24c",
+                "_id": "67195b0e28ef4a000f5cdbae",
                 "name": "Salary",
                 "type": "income"
             },
             {
-                "_id": "613a1f3e6f1f5e3534a3d2e1",
+                "_id": "6718f6a595a8c549cb97e899",
                 "name": "Groceries",
                 "type": "expense"
             }
@@ -74,7 +75,7 @@ This is a RESTful API for managing personal financial records such as income and
     - Response:
         ```json
         {
-            "_id": "613a1e1b6f1f5e3534a3d24c",
+            "_id": "67195b0e28ef4a000f5cdbae",
             "name": "Salary",
             "type": "income"
         }
@@ -91,7 +92,7 @@ This is a RESTful API for managing personal financial records such as income and
     - Response:
         ```json
         {
-            "_id": "613a1f3e6f1f5e3534a3d2e1",
+            "_id": "6718f6a595a8c549cb97e899",
             "name": "Food",
             "type": "expense"
         }
@@ -113,7 +114,7 @@ This is a RESTful API for managing personal financial records such as income and
         ```json
         {
             "type": "income", // or "expense"
-            "category": "613a1e1b6f1f5e3534a3d24c", // Category ObjectId
+            "category": "67195b0e28ef4a000f5cdbae", // Category ObjectId
             "amount": 1000,
             "description": "Freelance project payment"
         }
@@ -217,7 +218,7 @@ This is a RESTful API for managing personal financial records such as income and
         }
 
 6. Retrieve a Summary of Transactions
-    - URL: /api/summary
+    - URL: /api/transactions/summary
     - Method: GET
     - Query Parameters (Optional):
         - startDate: Filter transactions starting from this date (format: YYYY-MM-DD).
@@ -226,7 +227,47 @@ This is a RESTful API for managing personal financial records such as income and
     - Response:
         ```json
         {
-            "totalIncome": 1500,
-            "totalExpenses": 500,
-            "balance": 1000
+            "totalIncome": 1200,
+            "totalExpenses": 0,
+            "balance": 1200,
+            "transactions": [
+                {
+                    "_id": "671965f95f1b660010650d70",
+                    "type": "income",
+                    "category": "67195b0e28ef4a000f5cdbae",
+                    "amount": 1200,
+                    "date": "2024-10-23T21:09:13.883Z",
+                    "description": "Updated Freelance project payment",
+                    "__v": 0
+                }
+            ]
         }
+
+### Postman Collection for API calls
+Here are the screenshots showing API requests using Postman.
+
+#### For Categories
+1. Adding a Category
+    ![alt text](./images/image-1.png)
+2. Retrieving All Categories
+    ![alt text](./images/image-2.png)
+3. Retrieving a Category by ID
+    ![alt text](./images/image-3.png)
+4. Updating a Category
+    ![alt text](./images/image-4.png)
+5. Deleting a Category
+    ![alt text](./images/image-5.png)
+
+#### For Transactions
+1. Adding a Transaction
+    ![alt text](./images/image-6.png)
+2. Retrieving All Transactions
+    ![alt text](./images/image-7.png)
+3. Retrieving a Transaction by ID
+    ![alt text](./images/image-8.png)
+4. Updating a Transaction
+    ![alt text](./images/image-9.png)
+5. Deleting a Transaction
+    ![alt text](./images/image-10.png)
+6. Getting a Summary
+    ![alt text](./images/image-11.png)
